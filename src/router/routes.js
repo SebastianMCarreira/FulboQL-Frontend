@@ -20,6 +20,13 @@ const routes = [
     children: [
       { path: '', component: () => import('pages/Match.vue') }
     ]
+  },
+  {
+    path: '/match/:id/events',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/MatchEvents.vue') }
+    ]
   }
 ]
 

@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex" v-bind:class="{ 'flex-center': !matchLoaded }">
+  <q-page class="flex">
     <q-circular-progress
       indeterminate
       size="50px"
@@ -17,6 +17,7 @@
           {{ match.teamB.club.name }}
         </div>
       </div>
+      <q-btn color="primary" label="Start Loggin Events" class="full-width" @click="goToEvents(match.id)"/>
       <q-list>
         <q-item>
           <q-item-label>Referee: <span class="text-bold">{{ match.referee.name }} {{match.referee.surname }}</span></q-item-label>
@@ -113,7 +114,6 @@ export default {
       this.matchLoaded = false
       this.$axios.get('/api/match/' + id).then(response => {
         this.matchLoaded = true
-        console.log(response.data)
         this.match = response.data
       })
     },
@@ -132,10 +132,12 @@ export default {
           this.teamBPlayersLoaded = true
         })
       }
+    },
+    goToEvents (matchId) {
+      this.$router.push('/match/' + matchId + '/events')
     }
   },
   created () {
-    console.log(this.$route.params.id)
     this.loadMatch(this.$route.params.id)
   }
 }
