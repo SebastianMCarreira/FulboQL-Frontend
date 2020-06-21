@@ -6,6 +6,7 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'FulboQL',
+  apiEndpoint: 'http://localhost:5000'
 }
 </script>

@@ -6,7 +6,6 @@
 // Configuration for your app
 // https://quasar.dev/quasar-cli/quasar-conf-js
 /* eslint-env node */
-
 module.exports = function (/* ctx */) {
   return {
     // https://quasar.dev/quasar-cli/cli-documentation/supporting-ie
@@ -77,6 +76,13 @@ module.exports = function (/* ctx */) {
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
     devServer: {
+      proxy: {
+        // proxy all requests starting with /api to jsonplaceholder
+        '/api': {
+          target: process.env.FULBOQL_API_ENPOINT,
+          changeOrigin: true
+        }
+      },
       https: false,
       port: 8080,
       open: true // opens browser window automatically
