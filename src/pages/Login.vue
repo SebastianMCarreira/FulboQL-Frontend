@@ -37,7 +37,7 @@ export default {
         password: this.password
       }).then(response => {
         if (response.data === 'OK') {
-          this.$router.push('/matches')
+          this.$router.push('/match')
         }
       }).catch(response => {
         console.log(response)

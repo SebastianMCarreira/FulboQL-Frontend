@@ -9,9 +9,14 @@
     />
     <div v-bind:class="{ hidden: !matchesLoaded }" class="row full-width">
       <q-item v-for="(match, index) in matches" v-bind:key="index" class="full-width">
-        <q-card class="my-card full-width">
+        <q-card
+          class="my-card full-width cursor-pointer relative-position list-bar"
+          @click="goToMatch(match.id)">
           <q-card-section>
-            {{ match.teamA.club.name }} vs. {{ match.teamB.club.name }}
+            <span class="text-bold">{{ match.teamA.club.name }}</span>
+             vs.
+            <span class="text-bold">{{ match.teamB.club.name }}</span>
+            <span class="float-right">{{ match.dateOfStart }}</span>
           </q-card-section>
         </q-card>
       </q-item>
@@ -36,6 +41,9 @@ export default {
         console.log(response.data)
         this.matches = response.data
       })
+    },
+    goToMatch (id) {
+      this.$router.push('/match/' + id)
     }
   },
   created () {

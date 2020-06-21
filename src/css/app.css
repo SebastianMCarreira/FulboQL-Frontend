@@ -1,1 +1,8 @@
 /* app global css */
+.sub-header {
+    border-bottom: 1px solid #ccc;
+}
+
+.list-bar {
+    height: 50px;
+}
