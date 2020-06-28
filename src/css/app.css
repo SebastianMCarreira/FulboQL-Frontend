@@ -6,3 +6,9 @@
 .list-bar {
     height: 50px;
 }
+
+.clock {
+    padding: 5px;
+    border: black solid 2px;
+    border-radius: 10px;
+}
