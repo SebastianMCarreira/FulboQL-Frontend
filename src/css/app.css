@@ -21,4 +21,11 @@
     border: #ccc solid 2px;
     margin: 10px;
     padding: 10px;
+    max-height: 60vh;
+}
+
+.event-type-btns > div > button {
+    width: 35%;
+    height: 10vh;
+    min-height: 50px;
 }

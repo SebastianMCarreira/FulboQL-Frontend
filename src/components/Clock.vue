@@ -32,10 +32,6 @@ export default {
       type: String,
       required: true
     },
-    timeIn: {
-      type: String,
-      required: true
-    },
     milisecondsIn: {
       type: String,
       required: false,
@@ -44,16 +40,12 @@ export default {
     size: {
       type: String,
       default: '60'
-    },
-    startPause: {
-      type: Boolean,
-      default: false
     }
   },
   created () {
     this.seconds = parseInt(this.secondsIn)
     this.minutes = parseInt(this.minutesIn)
-    this.time = parseInt(this.timeIn)
+    this.time = this.$store.state.matchTime
     this.miliseconds = parseInt(this.milisecondsIn)
     this.matAccessTime = matAccessTime
     this.matPlayArrow = matPlayArrow
@@ -62,7 +54,6 @@ export default {
     this.textSize = Math.floor(this.size * 0.65) + 'px'
     this.totalHeight = Math.floor(this.size * 1.4) + 'px'
     this.totalWidth = Math.floor(this.size * 5.5) + 'px'
-    this.play = !this.startPause
     this.computeTimestamp()
     setInterval(() => {
       this.increaseTime()
@@ -71,16 +62,43 @@ export default {
   },
   methods: {
     computeTimestamp () {
-      let baseMinutes = 0
+      let baseMinutes = null
       let timeMinutes = 45
-      if (this.time === 1) {
-        baseMinutes = 45
-      } else if (this.time === 2) {
-        baseMinutes = 90
-        timeMinutes = 15
-      } else if (this.time === 3) {
-        baseMinutes = 105
-        timeMinutes = 15
+
+      switch (this.time) {
+        case 0:
+          baseMinutes = 0
+          break
+        case 1:
+          baseMinutes = 45
+          this.seconds = 0
+          this.play = false
+          break
+        case 2:
+          baseMinutes = 45
+          break
+        case 3:
+          baseMinutes = 90
+          this.seconds = 0
+          this.play = false
+          break
+        case 4:
+          baseMinutes = 90
+          timeMinutes = 15
+          break
+        case 5:
+          baseMinutes = 105
+          this.seconds = 0
+          this.play = false
+          break
+        case 6:
+          baseMinutes = 105
+          timeMinutes = 15
+          break
+        case 7:
+          baseMinutes = 120
+          this.play = false
+          break
       }
       const extraMinutes = this.minutes - timeMinutes
       let minutePart = ''
@@ -101,31 +119,39 @@ export default {
       this.$store.state.timestamp = timestamp
     },
     increaseTime (times) {
-      times = times || 1
-      if (times !== 1) {
-        this.seconds += times
-        if (this.seconds >= 60) {
-          this.seconds = this.seconds - 60
-          this.minutes++
-        } else if (this.seconds < 0) {
-          this.seconds = 60 + this.seconds
-          this.minutes--
-        }
-      }
-      if (this.play) {
-        this.miliseconds += 10 * times
-        if (this.miliseconds >= 1000) {
-          this.miliseconds = 0
-          this.seconds++
+      this.play = this.$store.state.clockPlay
+      if (this.time !== this.$store.state.matchTime || [1, 3, 5, 7].includes(this.time)) {
+        this.time = this.$store.state.matchTime
+        this.seconds = 0
+        this.play = false
+      } else {
+        times = times || 1
+        if (times !== 1) {
+          this.seconds += times
           if (this.seconds >= 60) {
-            this.seconds = 0
+            this.seconds = this.seconds - 60
             this.minutes++
+          } else if (this.seconds < 0) {
+            this.seconds = 60 + this.seconds
+            this.minutes--
+          }
+        }
+        if (this.play) {
+          this.miliseconds += 10 * times
+          if (this.miliseconds >= 1000) {
+            this.miliseconds = 0
+            this.seconds++
+            if (this.seconds >= 60) {
+              this.seconds = 0
+              this.minutes++
+            }
           }
         }
       }
     },
     togglePlay () {
       this.play = !this.play
+      this.$store.state.clockPlay = this.play
     },
     open (position) {
       this.position = position
