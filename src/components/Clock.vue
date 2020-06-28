@@ -44,6 +44,10 @@ export default {
     size: {
       type: String,
       default: '60'
+    },
+    startPause: {
+      type: Boolean,
+      default: false
     }
   },
   created () {
@@ -58,6 +62,7 @@ export default {
     this.textSize = Math.floor(this.size * 0.65) + 'px'
     this.totalHeight = Math.floor(this.size * 1.4) + 'px'
     this.totalWidth = Math.floor(this.size * 5.5) + 'px'
+    this.play = !this.startPause
     this.computeTimestamp()
     setInterval(() => {
       this.increaseTime()
