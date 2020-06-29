@@ -8,7 +8,8 @@
           <player-selector
             v-bind:valueId="shooterValueId"
             v-bind:matchId="this.$store.state.matchId"
-            v-bind:timestamp="this.$store.state.timestamp"/>
+            v-bind:timestamp="this.$store.state.timestamp"
+            title="Shooter"/>
         </q-item-section>
       </q-item>
       <q-item>
@@ -18,7 +19,9 @@
             v-bind:valueId="goalkeeperValueId"
             v-bind:matchId="this.$store.state.matchId"
             v-bind:timestamp="this.$store.state.timestamp"
-            v-bind:teamId="this.goalkeeperTeamId"/>
+            v-bind:teamId="this.goalkeeperTeamId"
+            :disable="!this.canLoadOthers"
+            title="Goalkeeper"/>
         </q-item-section>
       </q-item>
       <q-item>
@@ -28,7 +31,9 @@
             v-bind:valueId="assistValueId"
             v-bind:matchId="this.$store.state.matchId"
             v-bind:timestamp="this.$store.state.timestamp"
-            v-bind:teamId="this.assistTeamId"/>
+            v-bind:teamId="this.assistTeamId"
+            :disable="!this.canLoadOthers"
+            title="Assist"/>
         </q-item-section>
       </q-item>
       <q-item>
@@ -37,8 +42,9 @@
           <q-checkbox v-model="penalty" label="Penalty"/>
         </q-item-section>
       </q-item>
-      <q-item class="flex justify-end">
-        <q-btn label="Submit" color="primary" @click="submit()"/>
+      <q-item class="flex justify-between">
+        <q-btn label="Cancel" color="negative" @click="close()"/>
+        <q-btn label="Submit" color="primary" @click="submit()" :disable="!canSubmit"/>
       </q-item>
     </q-list>
   </div>
@@ -53,12 +59,15 @@ export default {
     PlayerSelector
   },
   created () {
-    setInterval(() => {
+    this.intervalId = setInterval(() => {
       const shooter = this.$store.state.eventForms[this.shooterValueId]
       if (shooter) {
         const teams = [this.$store.state.match.teamA, this.$store.state.match.teamB]
         this.goalkeeperTeamId = teams.filter(team => { return team.club.id !== shooter.club.id })[0].id
         this.assistTeamId = teams.filter(team => { return team.club.id === shooter.club.id })[0].id
+        this.canLoadOthers = true
+        const goalkeeper = this.$store.state.eventForms[this.goalkeeperValueId]
+        this.canSubmit = Boolean(goalkeeper)
       }
     }, 200)
   },
@@ -77,9 +86,13 @@ export default {
       await this.$axios.post('/api/match/' + this.$store.state.matchId + '/events/' + this.$store.state.timestamp + '/ongoal/',
         parameters
       )
+      this.close()
+    },
+    close () {
       this.$store.state.eventForms[this.shooterValueId] = undefined
       this.$store.state.eventForms[this.goalkeeperValueId] = undefined
       this.$store.state.eventForms[this.assistValueId] = undefined
+      clearInterval(this.intervalId)
       this.$store.state.closeLogEvent()
     }
   },
@@ -91,7 +104,10 @@ export default {
       goalkeeperTeamId: null,
       assistTeamId: null,
       goal: false,
-      penalty: false
+      penalty: false,
+      canSubmit: false,
+      intervalId: null,
+      canLoadOthers: false
     }
   }
 }

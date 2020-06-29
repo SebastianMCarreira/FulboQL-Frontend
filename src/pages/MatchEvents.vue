@@ -18,9 +18,10 @@
       </div>
     </div>
     <div class="flex justify-around">
-      <q-btn color="primary" label="Log Event" @click="openLogEvent()"/>
+      <q-btn color="primary" label="Finish Logging" @click="finishLoggin()"/>
+      <q-btn color="primary" label="Log Event" @click="openLogEvent()" :disable="!canLoadEvents"/>
     </div>
-    <q-dialog v-model="dialog" :position="position">
+    <q-dialog v-model="dialog" :position="position" persistent >
       <q-card style="width: 100%; height: 70vh; max-width: 600px" >
         <q-card-section>
           <div class="fit event-type-btns column justify-around" v-bind:class="{ hidden: !chooseEventType }">
@@ -37,8 +38,8 @@
               <q-btn color="primary" label="Substitution" :disable="!canLoadNormalEvents" @click="substitutionForm()"/>
             </div>
             <div class="full-width flex justify-around q-pa-md">
+              <q-btn color="negative" label="Cancel" @click="closeLogEvent()"/>
               <q-btn color="primary" label="Injury" :disable="!canLoadNormalEvents" @click="injuryForm()"/>
-              <q-btn color="primary" label="Cancel" @click="closeLogEvent()"/>
             </div>
           </div>
           <div v-bind:class="{ hidden: chooseEventType }" ref="formContainer">
@@ -86,7 +87,8 @@ export default {
         'SECONEXTRAEND'
       ],
       STOPPED_MATCH_MOMENTS: [1, 3, 5, 7],
-      canLoadNormalEvents: false
+      canLoadNormalEvents: false,
+      canLoadEvents: true
     }
   },
   methods: {
@@ -95,7 +97,6 @@ export default {
       this.events = []
       this.$axios.get('/api/match/' + this.$route.params.id + '/events').then(response => {
         this.eventsLoaded = true
-        console.log(response.data)
         this.events = response.data.sort((a, b) => { return a.id - b.id })
       })
     },
@@ -108,6 +109,10 @@ export default {
       for (const child of this.$refs.formContainer.children) {
         child.remove()
       }
+      this.$axios.get('/api/match/' + this.$route.params.id + '/can_log_events/')
+        .then(response => {
+          this.canLoadEvents = response.data
+        })
       this.loadEvents()
     },
     uploadMatchMoment () {

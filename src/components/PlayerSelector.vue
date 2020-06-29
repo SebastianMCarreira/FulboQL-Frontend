@@ -6,10 +6,14 @@
       v-bind:label="label"
       icon="person"
       @click="openDialog()"
+      :disable="disable"
       />
     <q-dialog v-model="playerDialog">
       <q-card>
         <q-card-section>
+          <div class="text-h5">
+            {{ title }}
+          </div>
           <q-option-group
             v-model="value"
             :options="players"
@@ -49,6 +53,14 @@ export default {
     selectorType: {
       type: String,
       default: 'radio'
+    },
+    title: {
+      type: String,
+      required: true
+    },
+    disable: {
+      type: Boolean,
+      default: false
     }
   },
   created () {

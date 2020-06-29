@@ -123,6 +123,7 @@ export default {
       if (this.time !== this.$store.state.matchTime || [1, 3, 5, 7].includes(this.time)) {
         this.time = this.$store.state.matchTime
         this.seconds = 0
+        this.minutes = 0
         this.play = false
       } else {
         times = times || 1

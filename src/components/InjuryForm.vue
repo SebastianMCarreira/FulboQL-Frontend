@@ -9,6 +9,7 @@
             v-bind:valueId="injuredValueId"
             v-bind:matchId="this.$store.state.matchId"
             v-bind:timestamp="this.$store.state.timestamp"
+            title="Injured Player"
           />
         </q-item-section>
       </q-item>
@@ -22,8 +23,9 @@
           />
         </q-item-section>
       </q-item>
-      <q-item class="flex justify-end">
-        <q-btn label="Submit" color="primary" @click="submit()"/>
+      <q-item class="flex justify-between">
+        <q-btn label="Cancel" color="negative" @click="close()"/>
+        <q-btn label="Submit" color="primary" @click="submit()" :disable="!canSubmit"/>
       </q-item>
     </q-list>
   </div>
@@ -37,7 +39,12 @@ export default {
   components: {
     PlayerSelector
   },
-  created () {},
+  created () {
+    this.intervalId = setInterval(() => {
+      const player = this.$store.state.eventForms[this.injuredValueId]
+      this.canSubmit = player && this.type
+    }, 200)
+  },
   methods: {
     async submit () {
       await this.$axios.post('/api/match/' + this.$store.state.matchId + '/events/' + this.$store.state.timestamp + '/injury/',
@@ -46,7 +53,11 @@ export default {
           injured_id: this.$store.state.eventForms[this.injuredValueId].id
         }
       )
+      this.close()
+    },
+    close () {
       this.$store.state.eventForms[this.injuredValueId] = undefined
+      clearInterval(this.intervalId)
       this.$store.state.closeLogEvent()
     }
   },
@@ -54,7 +65,9 @@ export default {
     return {
       injuredValueId: 'injury-injured',
       injuryTypeOptions: ['LOW', 'MED', 'HIG', 'OUT'],
-      type: null
+      type: null,
+      canSubmit: false,
+      intervalId: null
     }
   }
 }
