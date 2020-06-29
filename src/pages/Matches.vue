@@ -38,7 +38,6 @@ export default {
       this.matchesLoaded = false
       this.$axios.get('/api/match').then(response => {
         this.matchesLoaded = true
-        console.log(response.data)
         this.matches = response.data
       })
     },

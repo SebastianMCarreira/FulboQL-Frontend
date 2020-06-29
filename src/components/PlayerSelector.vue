@@ -14,6 +14,7 @@
             v-model="value"
             :options="players"
             @input="setOption()"
+            v-bind:type="selectorType"
           />
         </q-card-section>
       </q-card>
@@ -39,33 +40,27 @@ export default {
     },
     teamId: {
       type: Number,
-      default: null
+      default: undefined
     },
     as_substitute: {
       type: Boolean,
       default: false
+    },
+    selectorType: {
+      type: String,
+      default: 'radio'
     }
   },
   created () {
-    const getPlayersParams = {}
-    if (this.teamId) {
-      getPlayersParams.teamId = this.teamId
+    if (this.teamId === undefined) {
+      this.loadPossiblePlayers()
+    } else {
+      setInterval(() => {
+        if (!this.playersLoaded && this.teamId !== null && this.teamId !== undefined) {
+          this.loadPossiblePlayers()
+        }
+      }, 200)
     }
-    if (this.as_substitute) {
-      getPlayersParams.as_substitute = this.as_substitute + ''
-    }
-    this.$axios.get('/api/match/' + this.$store.state.matchId + '/players/' + this.timestamp + '/',
-      {
-        params: getPlayersParams
-      }).then(response => {
-      this.players = []
-      for (const player of response.data) {
-        this.players.push({
-          label: player.name + ' ' + player.surname,
-          value: player.id
-        })
-      }
-    })
   },
   methods: {
     openDialog () {
@@ -75,6 +70,28 @@ export default {
       this.playerDialog = false
       this.label = this.players.filter(p => { return p.value === this.value })[0].label
       this.$store.state.eventForms[this.valueId] = this.value
+    },
+    loadPossiblePlayers () {
+      const getPlayersParams = {}
+      if (this.teamId) {
+        getPlayersParams.teamId = this.teamId
+      }
+      if (this.as_substitute) {
+        getPlayersParams.as_substitute = this.as_substitute + ''
+      }
+      this.$axios.get('/api/match/' + this.$store.state.matchId + '/players/' + this.timestamp + '/',
+        {
+          params: getPlayersParams
+        }).then(response => {
+        this.players = []
+        for (const player of response.data) {
+          this.players.push({
+            label: player.club.acronym + ' - ' + player.position + ' - ' + player.name + ' ' + player.surname,
+            value: player
+          })
+        }
+        this.playersLoaded = true
+      })
     }
   },
   data () {
@@ -82,6 +99,7 @@ export default {
       label: 'Choose player',
       playerDialog: false,
       players: [],
+      playersLoaded: false,
       value: null
     }
   }

@@ -29,15 +29,15 @@
               <q-btn color="primary" label="Restart" :disable="!canLoadNormalEvents"  @click="restartForm()"/>
             </div>
             <div class="full-width flex justify-around q-pa-md">
-              <q-btn color="primary" label="Highlight" :disable="!canLoadNormalEvents"/>
-              <q-btn color="primary" label="Foul" :disable="!canLoadNormalEvents"/>
+              <q-btn color="primary" label="Highlight" :disable="!canLoadNormalEvents" @click="highlightForm()"/>
+              <q-btn color="primary" label="Foul" :disable="!canLoadNormalEvents" @click="foulForm()"/>
             </div>
             <div class="full-width flex justify-around q-pa-md">
-              <q-btn color="primary" label="On Goal" :disable="!canLoadNormalEvents"/>
-              <q-btn color="primary" label="Substitution" :disable="!canLoadNormalEvents"/>
+              <q-btn color="primary" label="On Goal" :disable="!canLoadNormalEvents" @click="onGoalForm()"/>
+              <q-btn color="primary" label="Substitution" :disable="!canLoadNormalEvents" @click="substitutionForm()"/>
             </div>
             <div class="full-width flex justify-around q-pa-md">
-              <q-btn color="primary" label="Injury" :disable="!canLoadNormalEvents"/>
+              <q-btn color="primary" label="Injury" :disable="!canLoadNormalEvents" @click="injuryForm()"/>
               <q-btn color="primary" label="Cancel" @click="closeLogEvent()"/>
             </div>
           </div>
@@ -54,6 +54,11 @@ import Vue from 'vue'
 import Clock from 'components/Clock.vue'
 import EventRow from 'components/EventRow.vue'
 import RestartForm from 'components/RestartForm.vue'
+import HighlightForm from 'components/HighlightForm.vue'
+import FoulForm from 'components/FoulForm.vue'
+import OnGoalForm from 'components/OnGoalForm.vue'
+import SubstitutionForm from 'components/SubstitutionForm.vue'
+import InjuryForm from 'components/InjuryForm.vue'
 export default {
   name: 'PageIndex',
   components: {
@@ -87,9 +92,11 @@ export default {
   methods: {
     loadEvents () {
       this.eventsLoaded = false
+      this.events = []
       this.$axios.get('/api/match/' + this.$route.params.id + '/events').then(response => {
         this.eventsLoaded = true
-        this.events = response.data
+        console.log(response.data)
+        this.events = response.data.sort((a, b) => { return a.id - b.id })
       })
     },
     openLogEvent () {
@@ -109,7 +116,6 @@ export default {
       }
       this.$store.state.clockPlay = !this.STOPPED_MATCH_MOMENTS.includes(this.$store.state.matchTime)
       this.canLoadNormalEvents = !this.STOPPED_MATCH_MOMENTS.includes(this.$store.state.matchTime)
-      console.log(this.canLoadNormalEvents)
       this.$axios.post('/api/match/' + this.$route.params.id + '/events/' + this.$store.state.timestamp + '/matchmoment/',
         {
           momentType: this.MATCH_MOMENTS_ORDER[this.$store.state.matchTime]
@@ -118,23 +124,42 @@ export default {
           this.closeLogEvent()
         })
     },
-    restartForm () {
+    loadForm (FormType) {
       this.chooseEventType = false
-      const ComponentClass = Vue.extend(RestartForm)
+      const ComponentClass = Vue.extend(FormType)
       const instance = new ComponentClass({
         propsData: {}
       })
       instance.$store = this.$store
       instance.$mount()
       this.$refs.formContainer.appendChild(instance.$el)
+    },
+    restartForm () {
+      this.loadForm(RestartForm)
+    },
+    highlightForm () {
+      this.loadForm(HighlightForm)
+    },
+    foulForm () {
+      this.loadForm(FoulForm)
+    },
+    onGoalForm () {
+      this.loadForm(OnGoalForm)
+    },
+    substitutionForm () {
+      this.loadForm(SubstitutionForm)
+    },
+    injuryForm () {
+      this.loadForm(InjuryForm)
     }
   },
-  created () {
+  async created () {
     this.$store.state.matchTime = -1
     this.$store.state.clockPlay = false
     this.$store.state.eventForms = {}
     this.$store.state.matchId = parseInt(this.$route.params.id)
     this.$store.state.closeLogEvent = this.closeLogEvent
+    this.$store.state.match = (await this.$axios.get('/api/match/' + this.$route.params.id)).data
     this.loadEvents()
   }
 }

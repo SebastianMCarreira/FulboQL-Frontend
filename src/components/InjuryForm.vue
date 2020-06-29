@@ -1,12 +1,12 @@
 <template>
   <div class="q-pa-lg">
-    <span class="text-h4">Restart</span>
+    <span class="text-h4">Injury</span>
     <q-list>
       <q-item>
         <q-item-section>
-          <q-item-label>Executor:</q-item-label>
+          <q-item-label>Injured:</q-item-label>
           <player-selector
-            v-bind:valueId="executorValueId"
+            v-bind:valueId="injuredValueId"
             v-bind:matchId="this.$store.state.matchId"
             v-bind:timestamp="this.$store.state.timestamp"
           />
@@ -14,11 +14,11 @@
       </q-item>
       <q-item>
         <q-item-section>
-          <q-item-label>Restart Type:</q-item-label>
+          <q-item-label>Severity:</q-item-label>
           <q-select
             filled
             v-model="type"
-            :options="restartTypeOptions"
+            :options="injuryTypeOptions"
           />
         </q-item-section>
       </q-item>
@@ -40,23 +40,20 @@ export default {
   created () {},
   methods: {
     async submit () {
-      await this.$axios.post('/api/match/' + this.$store.state.matchId + '/events/' + this.$store.state.timestamp + '/restart/',
+      await this.$axios.post('/api/match/' + this.$store.state.matchId + '/events/' + this.$store.state.timestamp + '/injury/',
         {
-          restartType: this.type,
-          executor_id: this.$store.state.eventForms[this.executorValueId].id
+          severity: this.type,
+          injured_id: this.$store.state.eventForms[this.injuredValueId].id
         }
       )
-      this.$store.state.eventForms[this.executorValueId] = undefined
+      this.$store.state.eventForms[this.injuredValueId] = undefined
       this.$store.state.closeLogEvent()
     }
   },
   data () {
     return {
-      executorValueId: 'restart-executor',
-      restartTypeOptions: [
-        'FREEKICK', 'PENALTY', 'GOALKICK',
-        'DROPBALL', 'CORNER', 'KICKOFF', 'THROWIN'
-      ],
+      injuredValueId: 'injury-injured',
+      injuryTypeOptions: ['LOW', 'MED', 'HIG', 'OUT'],
       type: null
     }
   }
