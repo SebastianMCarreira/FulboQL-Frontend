@@ -43,6 +43,13 @@ const routes = [
     ]
   },
   {
+    path: '/addMatch',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/match/AddMatch.vue') }
+    ]
+  },
+  {
     path: '/players',
     component: () => import('layouts/MainLayout.vue'),
     children: [

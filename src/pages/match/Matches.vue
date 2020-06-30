@@ -21,12 +21,17 @@
         </q-card>
       </q-item>
     </div>
+    <floating-add-btn route="/addMatch"/>
   </q-page>
 </template>
 
 <script>
+import FloatingAddBtn from 'components/FloatingAddBtn.vue'
 export default {
   name: 'PageIndex',
+  components: {
+    FloatingAddBtn
+  },
   data () {
     return {
       matchesLoaded: false,
