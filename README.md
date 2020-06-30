@@ -17,12 +17,13 @@ The frontend is a Vue.js app using Quasar.
 
 ### Instalation
 
-Clone the Git respository and configure the API endpoint
+Clone the Git respository and configure the environment and the API endpoint
 
 ~~~
 git clone https://github.com/SebastianMCarreira/FulboQL-Frontend.git
 cd FulboQL-Frontend
 export FULBOQL_API_ENPOINT="<insert your api endpoint here>"
+npm install
 quasar dev
 ~~~
 
