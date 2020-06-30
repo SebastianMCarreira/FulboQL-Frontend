@@ -20,7 +20,7 @@
             label="Manager A"
             map-options
             class="q-ma-sm"
-            @click="checkCanSubmit()"
+            @input="checkCanSubmit()"
             />
           <q-select
             filled
@@ -65,7 +65,7 @@
             label="Manager B"
             map-options
             class="q-ma-sm"
-            @click="checkCanSubmit()"
+            @input="checkCanSubmit()"
             />
           <q-select
             filled
@@ -100,14 +100,13 @@
             label="Referee"
             map-options
             class="q-ma-sm col-md-8 col-sm-12 col-xs-12"
-            @click="checkCanSubmit()"
+            @input="checkCanSubmit()"
             />
-          <q-input filled v-model="date" class="q-ma-sm col-md-3 col-sm-12 col-xs-12"
-            @click="checkCanSubmit()">
+          <q-input filled v-model="date" class="q-ma-sm col-md-3 col-sm-12 col-xs-12">
             <template v-slot:prepend>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                  <q-date v-model="date" mask="YYYY-MM-DD HH:mm" />
+                  <q-date v-model="date" mask="YYYY/MM/DD HH:mm"  @input="checkCanSubmit()" />
                 </q-popup-proxy>
               </q-icon>
             </template>
@@ -115,7 +114,7 @@
             <template v-slot:append>
               <q-icon name="access_time" class="cursor-pointer">
                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                  <q-time v-model="date" mask="YYYY-MM-DD HH:mm" format24h />
+                  <q-time v-model="date" mask="YYYY/MM/DD HH:mm" format24h  @input="checkCanSubmit()"/>
                 </q-popup-proxy>
               </q-icon>
             </template>
@@ -162,16 +161,35 @@ export default {
   methods: {
     checkCanSubmit () {
       this.canSubmit = this.clubA.value && this.clubB.value &&
-        this.managerA && this.managerB && this.titularsA.lenght === 11 &&
-        this.substitutesA.length === 7 && this.titularsB.length === 11 &&
-        this.substitutesB.length === 7 && this.referee && this.date
+        this.managerA && this.managerB && this.titularsA.length === 2 &&
+        this.substitutesA.length === 2 && this.titularsB.length === 2 &&
+        this.substitutesB.length === 2 && this.referee && this.date
+      console.log(this.date)
     },
-    submit () {
-      const params = {
-        name: this.name,
-        surname: this.surname
+    async submit () {
+      const paramsTeamA = {
+        club: this.clubA.value,
+        manager: this.managerA.value,
+        titulars: this.titularsA.map(p => { return p.value }),
+        substitutes: this.substitutesA.map(p => { return p.value })
       }
-      this.$axios.post('/api/referee', params).then(response => { this.goBack() })
+      const paramsTeamB = {
+        club: this.clubB.value,
+        manager: this.managerB.value,
+        titulars: this.titularsB.map(p => { return p.value }),
+        substitutes: this.substitutesB.map(p => { return p.value })
+      }
+      const teams = {}
+      teams.teamA = (await this.$axios.post('/api/team/', paramsTeamA)).data.id
+      teams.teamB = (await this.$axios.post('/api/team/', paramsTeamB)).data.id
+      this.$axios.post('/api/match/', {
+        teamA: teams.teamA,
+        teamB: teams.teamB,
+        dateOfStart: this.date,
+        referee: this.referee.value
+      }).then(response => {
+        this.goBack()
+      })
     },
     goBack () {
       this.$router.push('/matches')
@@ -282,12 +300,12 @@ export default {
     }
   },
   created () {
-    this.$axios.get('/api/club').then(response => {
+    this.$axios.get('/api/club/').then(response => {
       this.allClubs = response.data
       this.computeClubsA()
       this.computeClubsB()
     })
-    this.$axios.get('/api/referee').then(response => {
+    this.$axios.get('/api/referee/').then(response => {
       this.refereeOptions = response.data.map(r => {
         return {
           label: r.fullname,

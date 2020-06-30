@@ -34,18 +34,18 @@ export default {
         name: this.name,
         surname: this.surname
       }
-      this.$axios.put('/api/referee/' + this.$route.params.id, params).then(response => { this.goBack() })
+      this.$axios.put('/api/referee/' + this.$route.params.id + '/', params).then(response => { this.goBack() })
     },
     goBack () {
       this.$router.push('/referees')
     },
     del () {
-      this.$axios.delete('/api/referee/' + this.$route.params.id)
+      this.$axios.delete('/api/referee/' + this.$route.params.id + '/')
         .then(this.goBack)
     }
   },
   created () {
-    this.$axios.get('/api/referee/' + this.$route.params.id)
+    this.$axios.get('/api/referee/' + this.$route.params.id + '/')
       .then(response => {
         this.name = response.data.name
         this.surname = response.data.surname

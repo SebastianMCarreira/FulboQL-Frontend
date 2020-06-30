@@ -142,14 +142,14 @@ export default {
   methods: {
     loadMatch (id) {
       this.matchLoaded = false
-      this.$axios.get('/api/match/' + id).then(response => {
+      this.$axios.get('/api/match/' + id + '/').then(response => {
         this.matchLoaded = true
         this.match = response.data
       })
     },
     loadTeamA (teamId) {
       if (!this.teamAPlayersLoaded) {
-        this.$axios.get('/api/team/' + teamId + '/players').then(response => {
+        this.$axios.get('/api/team/' + teamId + '/players/').then(response => {
           this.teamAPlayers = response.data
           this.teamAPlayersLoaded = true
         })
@@ -157,7 +157,7 @@ export default {
     },
     loadTeamB (teamId) {
       if (!this.teamBPlayersLoaded) {
-        this.$axios.get('/api/team/' + teamId + '/players').then(response => {
+        this.$axios.get('/api/team/' + teamId + '/players/').then(response => {
           this.teamBPlayers = response.data
           this.teamBPlayersLoaded = true
         })

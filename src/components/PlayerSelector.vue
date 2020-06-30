@@ -14,11 +14,21 @@
           <div class="text-h5">
             {{ title }}
           </div>
+          <div class="full-width row justify-around">
+            <q-circular-progress
+                indeterminate
+                color="primary"
+                class="q-ma-md "
+                size="50px"
+                v-bind:class="{ hidden: playersLoaded }"
+              />
+          </div>
           <q-option-group
             v-model="value"
             :options="players"
             @input="setOption()"
             v-bind:type="selectorType"
+            v-bind:class="{ hidden: !playersLoaded }"
           />
         </q-card-section>
       </q-card>
@@ -67,11 +77,11 @@ export default {
     if (this.teamId === undefined) {
       this.loadPossiblePlayers()
     } else {
-      setInterval(() => {
+      this.intervalId = setInterval(() => {
         if (!this.playersLoaded && this.teamId !== null && this.teamId !== undefined) {
           this.loadPossiblePlayers()
         }
-      }, 200)
+      }, 50)
     }
   },
   methods: {
@@ -84,6 +94,7 @@ export default {
       this.$store.state.eventForms[this.valueId] = this.value
     },
     loadPossiblePlayers () {
+      clearInterval(this.intervalId)
       const getPlayersParams = {}
       if (this.teamId) {
         getPlayersParams.teamId = this.teamId
@@ -112,7 +123,8 @@ export default {
       playerDialog: false,
       players: [],
       playersLoaded: false,
-      value: null
+      value: null,
+      intervalId: null
     }
   }
 }

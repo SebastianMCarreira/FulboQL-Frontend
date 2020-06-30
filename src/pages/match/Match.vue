@@ -34,12 +34,12 @@
         >
         <div class="flex q-px-xl" v-bind:class="{ 'justify-center': !teamAPlayersLoaded }">
           <q-circular-progress
-                indeterminate
-                color="primary"
-                class="q-ma-md "
-                size="50px"
-                v-bind:class="{ hidden: teamAPlayersLoaded }"
-              />
+              indeterminate
+              color="primary"
+              class="q-ma-md "
+              size="50px"
+              v-bind:class="{ hidden: teamAPlayersLoaded }"
+            />
           <div v-bind:class="{ hidden: !teamAPlayersLoaded }"  class="full-width">
             <div class="text-h6">Titulars</div>
             <q-list>
@@ -112,14 +112,14 @@ export default {
   methods: {
     loadMatch (id) {
       this.matchLoaded = false
-      this.$axios.get('/api/match/' + id).then(response => {
+      this.$axios.get('/api/match/' + id + '/').then(response => {
         this.matchLoaded = true
         this.match = response.data
       })
     },
     loadTeamA (teamId) {
       if (!this.teamAPlayersLoaded) {
-        this.$axios.get('/api/team/' + teamId + '/players').then(response => {
+        this.$axios.get('/api/team/' + teamId + '/players/').then(response => {
           this.teamAPlayers = response.data
           this.teamAPlayersLoaded = true
         })
@@ -127,14 +127,14 @@ export default {
     },
     loadTeamB (teamId) {
       if (!this.teamBPlayersLoaded) {
-        this.$axios.get('/api/team/' + teamId + '/players').then(response => {
+        this.$axios.get('/api/team/' + teamId + '/players/').then(response => {
           this.teamBPlayers = response.data
           this.teamBPlayersLoaded = true
         })
       }
     },
     goToEvents (matchId) {
-      this.$router.push('/match/' + matchId + '/events')
+      this.$router.push('/match/' + matchId + '/events/')
     }
   },
   created () {

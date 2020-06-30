@@ -171,7 +171,7 @@ export default {
     this.$store.state.eventForms = {}
     this.$store.state.matchId = parseInt(this.$route.params.id)
     this.$store.state.closeLogEvent = this.closeLogEvent
-    this.$store.state.match = (await this.$axios.get('/api/match/' + this.$route.params.id)).data
+    this.$store.state.match = (await this.$axios.get('/api/match/' + this.$route.params.id + '/')).data
     this.loadEvents()
   }
 }

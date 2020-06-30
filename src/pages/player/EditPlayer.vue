@@ -52,7 +52,7 @@ export default {
       this.$router.push('/players')
     },
     del () {
-      this.$axios.delete('/api/player/' + this.$route.params.id)
+      this.$axios.delete('/api/player/' + this.$route.params.id + '/')
         .then(this.goBack)
     }
   },
@@ -65,7 +65,7 @@ export default {
         })
       }
     })
-    this.$axios.get('/api/player/' + this.$route.params.id)
+    this.$axios.get('/api/player/' + this.$route.params.id + '/')
       .then(response => {
         this.name = response.data.name
         this.surname = response.data.surname

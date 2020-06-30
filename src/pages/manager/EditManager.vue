@@ -41,13 +41,13 @@ export default {
       if (this.club) {
         params.club = this.club
       }
-      this.$axios.put('/api/manager/' + this.$route.params.id, params).then(response => { this.goBack() })
+      this.$axios.put('/api/manager/' + this.$route.params.id + '/', params).then(response => { this.goBack() })
     },
     goBack () {
       this.$router.push('/managers')
     },
     del () {
-      this.$axios.delete('/api/manager/' + this.$route.params.id)
+      this.$axios.delete('/api/manager/' + this.$route.params.id + '/')
         .then(this.goBack)
     }
   },

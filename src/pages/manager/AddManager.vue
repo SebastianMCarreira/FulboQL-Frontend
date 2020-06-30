@@ -40,7 +40,7 @@ export default {
       if (this.club) {
         params.club = this.club
       }
-      this.$axios.post('/api/manager', params).then(response => { this.goBack() })
+      this.$axios.post('/api/manager/', params).then(response => { this.goBack() })
     },
     goBack () {
       this.$router.push('/managers')

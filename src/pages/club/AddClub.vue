@@ -63,10 +63,10 @@ export default {
         full_name: this.fullname,
         acronym: this.acronym
       }
-      this.$axios.post('/api/club', params).then(response => {
+      this.$axios.post('/api/club/', params).then(response => {
         const clubId = response.data.id
         for (const playerToAdd of this.players) {
-          this.$axios.put('/api/club/' + clubId + '/addplayer/' + playerToAdd.value)
+          this.$axios.put('/api/club/' + clubId + '/addplayer/' + playerToAdd.value + '/')
         }
         this.goBack()
       })
@@ -97,7 +97,7 @@ export default {
     }
   },
   created () {
-    this.$axios.get('/api/player')
+    this.$axios.get('/api/player/')
       .then(response => {
         this.allPlayers = response.data.map(player => {
           return {

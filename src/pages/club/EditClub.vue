@@ -69,12 +69,12 @@ export default {
       const unchangedPlayers = this.players.filter(p => this.originalPlayers.includes(p))
       const playersToAdd = this.players.filter(p => !unchangedPlayers.includes(p))
       const playersToRemove = this.originalPlayers.filter(p => !unchangedPlayers.includes(p))
-      this.$axios.put('/api/club/' + this.$route.params.id, params).then(response => {
+      this.$axios.put('/api/club/' + this.$route.params.id + '/', params).then(response => {
         for (const playerToAdd of playersToAdd) {
-          this.$axios.put('/api/club/' + this.$route.params.id + '/addplayer/' + playerToAdd.value)
+          this.$axios.put('/api/club/' + this.$route.params.id + '/addplayer/' + playerToAdd.value + '/')
         }
         for (const playerToRemove of playersToRemove) {
-          this.$axios.delete('/api/club/' + this.$route.params.id + '/removeplayer/' + playerToRemove.id)
+          this.$axios.delete('/api/club/' + this.$route.params.id + '/removeplayer/' + playerToRemove.id + '/')
         }
         this.goBack()
       })
@@ -105,16 +105,16 @@ export default {
     },
     del () {
       Promise.all(this.players.map(player => {
-        return this.$axios.delete('/api/club/' + this.$route.params.id + '/removeplayer/' + player.id)
+        return this.$axios.delete('/api/club/' + this.$route.params.id + '/removeplayer/' + player.id + '/')
       })).then(response => {
-        this.$axios.delete('/api/club/' + this.$route.params.id).then(response => {
+        this.$axios.delete('/api/club/' + this.$route.params.id + '/').then(response => {
           this.goBack()
         })
       })
     }
   },
   created () {
-    this.$axios.get('/api/player')
+    this.$axios.get('/api/player/')
       .then(response => {
         this.allPlayers = response.data.map(player => {
           return {
@@ -123,7 +123,7 @@ export default {
           }
         })
       })
-    this.$axios.get('/api/club/' + this.$route.params.id)
+    this.$axios.get('/api/club/' + this.$route.params.id + '/')
       .then(response => {
         this.acronym = response.data.acronym
         this.city = response.data.city
@@ -131,7 +131,7 @@ export default {
         this.name = response.data.name
         this.stadium = response.data.stadium
       })
-    this.$axios.get('/api/club/' + this.$route.params.id + '/players')
+    this.$axios.get('/api/club/' + this.$route.params.id + '/players/')
       .then(response => {
         this.players = response.data.map(player => {
           return {

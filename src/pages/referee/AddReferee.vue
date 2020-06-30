@@ -33,7 +33,7 @@ export default {
         name: this.name,
         surname: this.surname
       }
-      this.$axios.post('/api/referee', params).then(response => { this.goBack() })
+      this.$axios.post('/api/referee/', params).then(response => { this.goBack() })
     },
     goBack () {
       this.$router.push('/referees')

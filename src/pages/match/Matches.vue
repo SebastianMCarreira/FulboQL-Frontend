@@ -7,7 +7,7 @@
       class="q-ma-md absolute-center"
       v-bind:class="{ hidden: matchesLoaded }"
     />
-    <div v-bind:class="{ hidden: !matchesLoaded }" class="row full-width">
+    <div v-bind:class="{ hidden: !matchesLoaded }" class="column full-width items-start">
       <q-item v-for="(match, index) in matches" v-bind:key="index" class="full-width">
         <q-card
           class="my-card full-width cursor-pointer relative-position list-bar"
