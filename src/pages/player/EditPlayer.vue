@@ -9,7 +9,7 @@
         <q-select filled v-model="position"
           :options="positionOptions" label="Position" class="q-ma-sm" @input="checkCanSubmit()"/>
         <q-select filled v-model="club" :options="clubOptions"
-          label="Club" class="q-ma-sm" emit-value map-options/>
+          label="Club" class="q-ma-sm" emit-value map-options @input="checkCanSubmit()"/>
         <div class="row justify-around">
             <q-btn class="q-ma-sm" color="negative" label="Cancel" @click="goBack()"/>
             <q-btn class="q-ma-sm" color="negative" label="Delete" @click="del()"/>

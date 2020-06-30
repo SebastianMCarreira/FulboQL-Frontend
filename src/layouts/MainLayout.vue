@@ -68,7 +68,7 @@ export default {
         },
         {
           title: 'Clubs',
-          link: '#/closedMatches'
+          link: '#/clubs'
         },
         {
           title: 'Players',
@@ -76,11 +76,11 @@ export default {
         },
         {
           title: 'Managers',
-          link: '#/closedMatches'
+          link: '#/managers'
         },
         {
           title: 'Referees',
-          link: '#/closedMatches'
+          link: '#/referees'
         }
       ]
     }
