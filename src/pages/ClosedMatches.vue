@@ -36,13 +36,14 @@ export default {
   methods: {
     loadMatches () {
       this.matchesLoaded = false
-      this.$axios.get('/api/match/open/').then(response => {
+      this.$axios.get('/api/match/closed/').then(response => {
         this.matchesLoaded = true
         this.matches = response.data
+        console.log(response.data[0])
       })
     },
     goToMatch (id) {
-      this.$router.push('/match/' + id)
+      this.$router.push('/closedMatch/' + id)
     }
   },
   created () {

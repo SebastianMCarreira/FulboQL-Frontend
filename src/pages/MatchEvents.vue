@@ -156,6 +156,13 @@ export default {
     },
     injuryForm () {
       this.loadForm(InjuryForm)
+    },
+    finishLoggin () {
+      this.$axios.put('/api/match/' + this.$route.params.id + '/close/')
+        .then(response => {
+          console.log(response.data)
+          this.$router.push('/closedMatches/')
+        })
     }
   },
   async created () {

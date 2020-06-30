@@ -8,7 +8,7 @@ const routes = [
     ]
   },
   {
-    path: '/match',
+    path: '/matches',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/Matches.vue') }
@@ -26,6 +26,41 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/MatchEvents.vue') }
+    ]
+  },
+  {
+    path: '/closedMatches',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/ClosedMatches.vue') }
+    ]
+  },
+  {
+    path: '/closedMatch/:id',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/ClosedMatch.vue') }
+    ]
+  },
+  {
+    path: '/players',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/Players.vue') }
+    ]
+  },
+  {
+    path: '/addPlayer',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/AddPlayer.vue') }
+    ]
+  },
+  {
+    path: '/editPlayer/:id',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/EditPlayer.vue') }
     ]
   }
 ]

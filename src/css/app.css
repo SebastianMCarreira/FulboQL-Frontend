@@ -29,3 +29,11 @@
     height: 10vh;
     min-height: 50px;
 }
+
+.floating-btn-foreground {
+    z-index: -500;
+}
+
+.floating-btn {
+    z-index: 5000;
+}

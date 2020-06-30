@@ -59,16 +59,28 @@ export default {
       leftDrawerOpen: false,
       essentialLinks: [
         {
-          title: 'Profile',
-          link: '/profile'
-        },
-        {
           title: 'Active Matches',
-          link: '/matches'
+          link: '#/matches/'
         },
         {
-          title: 'Past Matches',
-          link: '/pastMatches'
+          title: 'Closed Matches',
+          link: '#/closedMatches'
+        },
+        {
+          title: 'Clubs',
+          link: '#/closedMatches'
+        },
+        {
+          title: 'Players',
+          link: '#/players'
+        },
+        {
+          title: 'Managers',
+          link: '#/closedMatches'
+        },
+        {
+          title: 'Referees',
+          link: '#/closedMatches'
         }
       ]
     }
